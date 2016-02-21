@@ -1,0 +1,9 @@
+Package: beamaUtils
+Type: Package
+Title: Utility functions
+Version: 0.1.0
+Author: Emmanuel Amoakohene
+Maintainer: <eamoakohene@gmail.com>
+Description: Utility functions
+License: GPL-2
+LazyData: TRUE
