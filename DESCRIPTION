@@ -1,7 +1,7 @@
 Package: beamaUtils
 Type: Package
 Title: Utility functions
-Version: 0.1.0
+Version: 0.1.1
 Author: Emmanuel Amoakohene
 Maintainer: <eamoakohene@gmail.com>
 Description: Utility functions
