@@ -77,3 +77,9 @@ plot_latest_packages <- function(
   print(p)
   return(logs)
 }
+
+split_str <- function( s="CHAY,CHAW,D7BT"){
+  abc <- base::gsub(",","','",s)
+  abc <- base::paste0("('",abc,"')")
+  return(abc)
+}
