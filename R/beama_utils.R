@@ -83,3 +83,7 @@ split_str <- function( s="CHAY,CHAW,D7BT"){
   abc <- base::paste0("('",abc,"')")
   return(abc)
 }
+
+to_clipboard = function( x, row.names=FALSE, col.names=TRUE, ...) {
+    write.table( x,"clipboard", sep="\t", row.names=row.names, col.names=col.names, ...)
+}
