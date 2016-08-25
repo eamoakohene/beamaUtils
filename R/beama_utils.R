@@ -34,6 +34,7 @@ plot_latest_packages <- function(
      top = 25
 ){
 
+  require(ggplot2)
   page <- xml2::read_html(cran_url)
   titles <-  rvest::html_text(rvest::html_nodes(page,"b"))
   new_packages <- unique(
@@ -68,14 +69,15 @@ plot_latest_packages <- function(
   logs <- do.call( rbind, logs)
   logs <- dplyr::arrange(logs,desc(downloads))
   logs$package <- factor(logs$package,levels = logs$package)
+  gg_data <- logs[1:top,]
 
-  p <- ggplot2::ggplot(logs[1:top],ggplot2::aes(x=package, y=downloads, fill=package))
-  p <- p + ggplot2::geom_bar( stat='identity' )
-  p <- p + ggplot2::coord_flip()
-  p <- p + ggplot2::theme(legend.position = "none")
-  p <- p + ggplot2::labs(y='')
+  p <- ggplot(gg_data,ggplot2::aes(x=package, y=downloads, fill=package))
+  p <- p + geom_bar( stat='identity' )
+  p <- p + coord_flip()
+  p <- p + theme(legend.position = "none")
+  p <- p + labs(y='Downloads')
   print(p)
-  return(logs)
+  return(gg_data)
 }
 
 split_str <- function( s="CHAY,CHAW,D7BT"){
@@ -84,6 +86,15 @@ split_str <- function( s="CHAY,CHAW,D7BT"){
   return(abc)
 }
 
-to_clipboard = function( x, row.names=FALSE, col.names=TRUE, ...) {
+to_clipboard <- function( x, row.names=FALSE, col.names=TRUE, ...) {
     write.table( x,"clipboard", sep="\t", row.names=row.names, col.names=col.names, ...)
+}
+
+ts_to_df <- function( my_ts){
+
+  my_df <- data.frame( date=zoo::as.Date(zoo::as.yearmon(time(my_ts))), value=as.matrix(my_ts ))
+  my_df$yr <- lubridate::year(my_df$date)
+  my_df$mth <- lubridate::month(my_df$date)
+
+  return(my_df)
 }
