@@ -26,6 +26,17 @@ use_package <- function(p) {
   require(p, character.only = TRUE)
 
 }
+#devtools::install_github('eamoakohene/beamaUtils')
+use_ea_github<- function(p) {
+
+  if (!is.element(p, installed.packages()[,1])){
+    devtools::install_github(sprintf('eamoakohene/%s',p))
+  }
+
+  require(p, character.only = TRUE)
+
+}
+
 
 plot_latest_packages <- function(
 
