@@ -17,23 +17,103 @@ view_object <- function( obj ){
 }
 
 #' Load R library. Install if not already installed
-use_package <- function(p) {
+use_package <- function(p, load_packages = TRUE) {
 
   if (!is.element(p, installed.packages()[,1])){
     install.packages(p, dep = TRUE)
   }
 
-  require(p, character.only = TRUE)
+  if(load_packages) { require(p, character.only = TRUE) }
 
 }
+
 #devtools::install_github('eamoakohene/beamaUtils')
-use_ea_github<- function(p) {
+use_ea_github<- function(p , load_packages = TRUE) {
 
   if (!is.element(p, installed.packages()[,1])){
     devtools::install_github(sprintf('eamoakohene/%s',p))
   }
 
-  require(p, character.only = TRUE)
+  if( load_packages) { require(p, character.only = TRUE) }
+
+}
+
+install_packages <- function(load_packages = FALSE){
+
+  if (!is.element("devtools", installed.packages()[, 1])) {
+
+    install.packages("devtools", dep = TRUE)
+    require("devtools")
+
+  }
+
+
+  use_package("installr", load_packages = load_packages)
+  use_package("digest", load_packages = load_packages)
+  use_package("quantmod", load_packages = load_packages)
+  use_package("gridExtra", load_packages = load_packages)
+  use_package("reshape2", load_packages = load_packages)
+  use_package('tidyr', load_packages = load_packages)
+  use_package("ggplot2", load_packages = load_packages)
+  use_package("MASS", load_packages = load_packages)
+  use_package("tseries", load_packages = load_packages)
+  use_package("x12", load_packages = load_packages)
+  use_package("R.oo", load_packages = load_packages)
+  use_package("forecast", load_packages = load_packages)
+  use_package("plyr", load_packages = load_packages)
+  use_package("scales", load_packages = load_packages)
+  use_package("RODBC", load_packages = load_packages)
+  use_package("xtable", load_packages = load_packages)
+  use_package("gdata", load_packages = load_packages)
+  use_package("RJSONIO", load_packages = load_packages)
+  use_package("WDI", load_packages = load_packages)
+  use_package("lubridate", load_packages = load_packages)
+  use_package("grid", load_packages = load_packages)
+  use_package("Quandl", load_packages = load_packages)
+  use_package("dplyr", load_packages = load_packages)
+  use_package("plotly", load_packages = load_packages)
+  use_package("sqldf", load_packages = load_packages)
+  use_package("PerformanceAnalytics", load_packages = load_packages)
+  use_package("ggthemes", load_packages = load_packages)
+  use_package("RCurl", load_packages = load_packages)
+  use_package("XML", load_packages = load_packages)
+  use_package("codetools", load_packages = load_packages)
+
+  use_package("lattice", load_packages = load_packages)
+  use_package("Rcpp", load_packages = load_packages)
+  use_package("inline", load_packages = load_packages)
+  use_package("animation", load_packages = load_packages)
+  #use_package("rstan")
+
+  use_package("microbenchmark", load_packages = load_packages)
+  use_package("XLConnect", load_packages = load_packages)
+  use_package("mosaic", load_packages = load_packages)
+  use_package("qdap", load_packages = load_packages)
+  use_package("pipeR", load_packages = load_packages)
+  use_package("colorspace", load_packages = load_packages)
+  use_package("MAPA", load_packages = load_packages)
+
+  use_package('networkD3', load_packages = load_packages)
+  use_package('dygraphs', load_packages = load_packages)
+  #use_package("bigrquery")
+
+  use_package("rlist", load_packages = load_packages)
+  use_package("stsm", load_packages = load_packages)
+  use_package("knitr", load_packages = load_packages)
+  use_package("DT", load_packages = load_packages)
+
+  use_package("shiny", load_packages = load_packages)
+  use_package("shinyjs", load_packages = load_packages)
+  use_package("shinyBS", load_packages = load_packages)
+  use_package("shinydashboard", load_packages = load_packages)
+
+  ## EA github repositories
+  use_ea_github("beamaSankey", load_packages = load_packages)
+  use_ea_github("beamaTrends", load_packages = load_packages)
+  use_ea_github("beamafx", load_packages = load_packages)
+  use_ea_github("storedQry", load_packages = load_packages)
+  use_ea_github("onsR2", load_packages = load_packages)
+  use_ea_github("beamaColours", load_packages = load_packages)
 
 }
 
