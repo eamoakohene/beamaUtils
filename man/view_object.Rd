@@ -11,7 +11,7 @@ view_object(p)
  The details of object \code{p}
 }
 \description{
-Prints 'view_object, world!'.
+View an R object.
 }
 \examples{
 df <- data.frame( a=rnorm(10), y=rnorm(10) )
