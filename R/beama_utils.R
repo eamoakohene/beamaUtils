@@ -181,6 +181,9 @@ to_clipboard <- function( x, row.names=FALSE, col.names=TRUE, ...) {
     write.table( x,"clipboard", sep="\t", row.names=row.names, col.names=col.names, ...)
 }
 
+#' Timeseries to Dataframe
+#' Convert timeseries object \code{my_ts} to a data frame with columns \code{yr, mth, value, date}
+#'
 ts_to_df <- function( my_ts){
 
   my_df <- data.frame( date=zoo::as.Date(zoo::as.yearmon(time(my_ts))), value=as.matrix(my_ts ))
@@ -188,4 +191,30 @@ ts_to_df <- function( my_ts){
   my_df$mth <- lubridate::month(my_df$date)
 
   return(my_df)
+}
+
+#' Data days
+#' Convert a date to days using assuming \code{d360} days in a year
+#' Returns number of days
+#'
+ddays <- function(yr, mth, dy = 0 , d360 = 31 ){
+
+  return( yr * d360 * 12 + mth * d360 + dy )
+
+}
+
+#' Difference between dates
+#'
+days_diff <- function(d1="1969-09-28", d2=Sys.Date() ){
+
+    y1 <- lubridate::year(d1)
+    m1 <- lubridate::month(d1)
+    d1 <- lubridate::day(d1)
+
+    y2 <- lubridate::year(d2)
+    m2 <- lubridate::month(d2)
+    d2 <- lubridate::day(d2)
+
+    return( ddays(y2,m2,d2) - ddays(y1,m1,d1) )
+
 }
