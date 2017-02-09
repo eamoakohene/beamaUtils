@@ -218,3 +218,9 @@ days_diff <- function(d1="1969-09-28", d2=Sys.Date() ){
     return( ddays(y2,m2,d2) - ddays(y1,m1,d1) )
 
 }
+
+days_to <- function(d="2050-01-01"){
+   return(
+     days_diff(Sys.Date(), d)
+   )
+}
