@@ -1,12 +1,19 @@
 #' Set the number of decimal places
 #' x = numeric
 #' k = integer
-set_decimal <- function(x, k){
-  if(x[1]<200){
-    format(round(x, k), nsmall=k,big.mark=",")
-  }else {
-    format(round(x, 0), nsmall=0,big.mark=",")
+set_decimal <- function(x, k, cut = 200){
+
+  if( !is.null(x) && length(x)> 0 ){
+
+
+    if( x[ 1 ]< cut ){
+      format(round(x, k), nsmall=k,big.mark=",")
+    }else {
+      format(round(x, 0), nsmall=0,big.mark=",")
+    }
+
   }
+
 }
 
 #' General object viewer
