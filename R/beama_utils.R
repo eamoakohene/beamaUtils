@@ -239,14 +239,14 @@ days_since <- function(d="2050-01-01"){
   )
 }
 
-run_sql <- function(qry, db){
+run_sql <- function(qry, db='R:/shiny/beama/bmonitor/bss.sqlite'){
   conn <- DBI::dbConnect( RSQLite::SQLite(), dbname= db )
   results <- RSQLite::dbGetQuery(conn, qry)
   DBI::dbDisconnect(conn)
   return(results)
 }
 
-get_fxn <- function(name, db){
+get_fxn <- function(name, db='R:/shiny/beama/bmonitor/bss.sqlite'){
 
   my_name <- tolower(name)
   my_sql <- sprintf("select fxn from stored_fxns where lower(name) ='%s'", my_name)
