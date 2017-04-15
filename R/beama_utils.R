@@ -1,6 +1,7 @@
 #' Set the number of decimal places
 #' x = numeric
 #' k = integer
+
 set_decimal <- function(x, k, cut = 200){
 
   if( !is.null(x) && length(x)> 0 ){
@@ -230,4 +231,34 @@ days_to <- function(d="2050-01-01"){
    return(
      days_diff(Sys.Date(), d)
    )
+}
+
+days_since <- function(d="2050-01-01"){
+  return(
+    days_diff( d, Sys.Date())
+  )
+}
+
+run_sql <- function(qry, db='R:/shiny/beama/bmonitor/bss.sqlite'){
+  conn <- DBI::dbConnect( RSQLite::SQLite(), dbname= db )
+  results <- RSQLite::dbGetQuery(conn, qry)
+  DBI::dbDisconnect(conn)
+  return(results)
+}
+
+get_fxn <- function(name, db='R:/shiny/beama/bmonitor/bss.sqlite'){
+
+  my_name <- tolower(name)
+  my_sql <- sprintf("select fxn from stored_fxns where lower(name) ='%s'", my_name)
+  my_data <- run_sql(qry =  my_sql, db = db )
+  my_fxn <- NULL
+
+  if( nrow(my_data) > 0){
+
+    my_fxn <- my_data$fxn
+    return( eval(parse(text = my_fxn)) )
+
+  }
+  return(NULL)
+
 }
