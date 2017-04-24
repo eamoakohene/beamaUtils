@@ -192,13 +192,23 @@ to_clipboard <- function( x, row.names=FALSE, col.names=TRUE, ...) {
 #' Timeseries to Dataframe
 #' Convert timeseries object \code{my_ts} to a data frame with columns \code{yr, mth, value, date}
 #'
-ts_to_df <- function( my_ts){
+ts_to_df <- function( my_ts, na.rm = FALSE){
 
   my_df <- data.frame( date=zoo::as.Date(zoo::as.yearmon(time(my_ts))), value=as.matrix(my_ts ))
   my_df$yr <- lubridate::year(my_df$date)
   my_df$mth <- lubridate::month(my_df$date)
 
-  return(my_df)
+  if( na.rm ){
+
+    return(
+      dplyr::filter( my_df , is.na( value ) == FALSE)
+    )
+
+  }else{
+
+   return(my_df)
+
+  }
 }
 
 #' Data days
