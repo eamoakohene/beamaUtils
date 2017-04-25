@@ -256,7 +256,7 @@ run_sql <- function(qry, db='R:/shiny/beama/bmonitor/bss.sqlite'){
   return(results)
 }
 
-get_fxn <- function(name, db='R:/shiny/beama/bmonitor/bss.sqlite'){
+get_fxn <- function(name, db='R:/shiny/beama/bmonitor/bss.sqlite', view = FALSE){
 
   my_name <- tolower(name)
   my_sql <- sprintf("select fxn from stored_fxns where lower(name) ='%s'", my_name)
@@ -266,8 +266,15 @@ get_fxn <- function(name, db='R:/shiny/beama/bmonitor/bss.sqlite'){
   if( nrow(my_data) > 0){
 
     my_fxn <- my_data$fxn
-    return( eval(parse(text = my_fxn)) )
+    if(!view){
 
+      return( eval(parse(text = my_fxn)) )
+
+    }else{
+
+      cat( my_fxn,"\n")
+
+    }
   }
   return(NULL)
 
