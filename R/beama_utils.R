@@ -279,3 +279,21 @@ get_fxn <- function(name, db='R:/shiny/beama/bmonitor/bss.sqlite', view = FALSE)
   return(NULL)
 
 }
+
+save_plot <- function(
+
+   file="glance.png",
+   width=633,
+   height=219,
+   path="W:/reports/latex/images/",
+   ppi=72
+
+){
+  ggplot2::ggsave(
+    file = paste0(path,file),
+    height = height / ppi,
+    width = width / ppi,
+    dpi = ppi,
+    units = "in"
+)
+}
