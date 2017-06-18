@@ -194,9 +194,25 @@ to_clipboard <- function( x, row.names=FALSE, col.names=TRUE, ...) {
 #'
 ts_to_df <- function( my_ts, na.rm = FALSE){
 
-  my_df <- data.frame( date=zoo::as.Date(zoo::as.yearmon(time(my_ts))), value=as.matrix(my_ts ))
-  my_df$yr <- lubridate::year(my_df$date)
-  my_df$mth <- lubridate::month(my_df$date)
+  my_freq <- frequency( my_ts )
+  my_date <- my_yr <- my_mon<- NULL
+
+  if( my_freq %in% c(1,12) ){
+
+    my_df <- data.frame( date=zoo::as.Date(zoo::as.yearmon(time(my_ts))), value=as.matrix(my_ts ))
+    my_df$mth <- lubridate::month(my_df$date)
+    my_df$yr <- lubridate::year(my_df$date)
+
+  }else if( my_freq == 4){
+
+    my_df <- data.frame( date=zoo::as.Date(zoo::as.yearqtr(time(my_ts))), value=as.matrix(my_ts ))
+    my_df$mth <- lubridate::month(my_df$date) + 2
+    my_df$yr <- lubridate::year(my_df$date)
+    my_df$date <- as.Date( paste(my_df$yr, my_df$mth, 1, sep='-'))
+  }
+
+
+
 
   if( na.rm ){
 
