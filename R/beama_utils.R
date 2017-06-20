@@ -227,6 +227,41 @@ ts_to_df <- function( my_ts, na.rm = FALSE){
   }
 }
 
+ts_dates <- function(x){
+
+  if(! is.ts( x )){ return( NULL )}
+
+  if(frequency(x)==12){
+    return(
+      seq(
+        as.Date(paste(c(start(x),28), collapse = "/")),
+        by = "month",
+        length.out = length(x)
+      )
+    )
+  }else if(frequency(x)==4){
+    return(
+      seq.Date(
+        as.Date(paste(start(x)[1],start(x)[2]*3,28,sep="/")),
+        length.out = length(x),
+        by="3 months"
+      )
+    )
+  }else if(frequency(x)==1){
+    return(
+      seq(
+        as.Date(paste(c(start(x),1), collapse = "/")),
+        by = "year",
+        length.out = length(x)
+      )
+    )
+
+  }else{
+    stop("Frequency of time series UNKNOWN")
+  }
+}
+
+
 #' Data days
 #' Convert a date to days using assuming \code{d360} days in a year
 #' Returns number of days
