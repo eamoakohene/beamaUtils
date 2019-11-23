@@ -86,6 +86,23 @@ install_packages <- function(load_packages = FALSE){
   use_package("RCurl", load_packages = load_packages)
   use_package("XML", load_packages = load_packages)
   use_package("codetools", load_packages = load_packages)
+  use_package("pbapply", load_packages = load_packages)
+  use_package("cranlogs", load_packages = load_packages)
+
+  use_package("NMF", load_packages = load_packages)
+  use_package("doParallel", load_packages = load_packages)
+  use_package("foreach", load_packages = load_packages)
+  use_package("googleVis", load_packages = load_packages)
+  use_package("gridBase", load_packages = load_packages)
+  use_package("irlba", load_packages = load_packages)
+  use_package("iterators", load_packages = load_packages)
+  use_package("pkgmaker", load_packages = load_packages)
+  use_package("registry", load_packages = load_packages)
+  use_package("rngtools", load_packages = load_packages)
+  use_package("seasonal", load_packages = load_packages)
+  use_package("RSQLite", load_packages = load_packages)
+  use_package("rlang", load_packages = load_packages)
+  use_package("selectr", load_packages = load_packages)
 
   use_package("lattice", load_packages = load_packages)
   use_package("Rcpp", load_packages = load_packages)
@@ -114,21 +131,46 @@ install_packages <- function(load_packages = FALSE){
   use_package("shinyjs", load_packages = load_packages)
   use_package("shinyBS", load_packages = load_packages)
   use_package("shinydashboard", load_packages = load_packages)
+  use_package("bsplus", load_packages = load_packages)
+
+  use_package("ggpol", load_packages = load_packages)
+  use_package("fedr", load_packages = load_packages)
+  use_package("ggrepel", load_packages = load_packages)
+  use_package("geosphere", load_packages = load_packages)
+  use_package("extrafont", load_packages = load_packages)
+  use_package("curl", load_packages = load_packages)
+  use_package("ggforce", load_packages = load_packages)
+  use_package("sjmisc", load_packages = load_packages)
+  use_package("RJDemetra", load_packages = load_packages)
+  use_package("showtext", load_packages = load_packages)
+  use_package("gganimate", load_packages = load_packages)
+  use_package("gifski", load_packages = load_packages)
+  use_package("packcircles", load_packages = load_packages)
+  use_package("likert", load_packages = load_packages)
+  use_package("RODBCext", load_packages = load_packages)
+
+  #use_package("", load_packages = load_packages)
 
   ## EA github repositories
-  use_ea_github("beamaSankey", load_packages = load_packages)
-  use_ea_github("beamaTrends", load_packages = load_packages)
-  use_ea_github("beamafx", load_packages = load_packages)
-  use_ea_github("storedQry", load_packages = load_packages)
-  use_ea_github("onsR2", load_packages = load_packages)
   use_ea_github("beamaColours", load_packages = load_packages)
+  use_ea_github("storedQry", load_packages = load_packages)
+  use_ea_github("beamaSankey", load_packages = load_packages)
+  use_ea_github("beamafx", load_packages = load_packages)
+  use_ea_github("onsR2", load_packages = load_packages)
+
+
+  #use_ea_github("beamaTrends", load_packages = load_packages)
+
+
+
+
 
 }
 
 
 plot_latest_packages <- function(
 
-     since="2016-01-01",
+     since="2019-01-01",
      cran_url = "http://dirk.eddelbuettel.com/cranberries/",
      top = 25
 ){
@@ -347,4 +389,12 @@ save_plot <- function(
     dpi = ppi,
     units = "in"
 )
+}
+
+df_to_list <- function(df,col_name, col_value){
+
+  e <- base::new.env(hash = TRUE)
+  for (i in 1:nrow(df) ) { base::assign( df[i, col_name], df[i, col_value], e) }
+
+  return( as.list(e))
 }
