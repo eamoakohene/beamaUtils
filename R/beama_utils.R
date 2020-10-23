@@ -39,7 +39,7 @@ use_package <- function(p, load_packages = TRUE) {
 use_ea_github<- function(p , load_packages = TRUE) {
 
   if (!is.element(p, installed.packages()[,1])){
-    devtools::install_github(sprintf('eamoakohene/%s',p))
+    devtools::install_github(sprintf('eamoakohene/%s',p), upgrade = "never", force = "true")
   }
 
   if( load_packages) { require(p, character.only = TRUE) }
@@ -101,6 +101,7 @@ install_packages <- function(load_packages = FALSE){
   use_package("rngtools", load_packages = load_packages)
   use_package("seasonal", load_packages = load_packages)
   use_package("RSQLite", load_packages = load_packages)
+  use_package("zeallot", load_packages = load_packages)
   use_package("rlang", load_packages = load_packages)
   use_package("selectr", load_packages = load_packages)
 
@@ -134,7 +135,7 @@ install_packages <- function(load_packages = FALSE){
   use_package("bsplus", load_packages = load_packages)
 
   use_package("ggpol", load_packages = load_packages)
-  use_package("fedr", load_packages = load_packages)
+  use_package("fredr", load_packages = load_packages)
   use_package("ggrepel", load_packages = load_packages)
   use_package("geosphere", load_packages = load_packages)
   use_package("extrafont", load_packages = load_packages)
@@ -148,6 +149,8 @@ install_packages <- function(load_packages = FALSE){
   use_package("packcircles", load_packages = load_packages)
   use_package("likert", load_packages = load_packages)
   use_package("RODBCext", load_packages = load_packages)
+  use_package("sparkline", load_packages = load_packages)
+  use_package("rsconnect", load_packages = load_packages)
 
   #use_package("", load_packages = load_packages)
 
@@ -224,6 +227,12 @@ plot_latest_packages <- function(
 split_str <- function( s="CHAY,CHAW,D7BT"){
   abc <- base::gsub(",","','",s)
   abc <- base::paste0("('",abc,"')")
+  return(abc)
+}
+
+split_int <- function( s="CHAY,CHAW,D7BT"){
+  #abc <- base::gsub(",","','",s)
+  abc <- base::paste0("",s,")")
   return(abc)
 }
 
@@ -371,6 +380,12 @@ get_fxn <- function(name, db='R:/shiny/beama/bmonitor/bss.sqlite', view = FALSE)
   }
   return(NULL)
 
+}
+
+scrap_fxn <- function(){
+  return(
+    get_fxn("scrap_web_data")
+  )
 }
 
 save_plot <- function(
