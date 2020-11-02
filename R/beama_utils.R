@@ -440,7 +440,8 @@ db_paths <- function(){
         'uktrade_info',
         'covid19',
         'surveys',
-        'bindx'
+        'bindx',
+        'bmonitor'
       ),
       path=c(
         '/packages/bistats/inst/extdata/bistats.sqlite',
@@ -465,7 +466,8 @@ db_paths <- function(){
         '/data/lite/uktrade_info.sqlite',
         '/data/lite/covid19',
         '/packages/surveys/surveys.sqlite',
-        '/packages/bindx/R/beama_indices.sqlite'
+        '/packages/bindx/R/beama_indices.sqlite',
+        '/shiny/beama/bmonitor/bss.sqlite'
 
       ),
       stringsAsFactors = FALSE
@@ -501,14 +503,14 @@ view_tbls <- function(db, drv = 'R'){
   }
 }
 
-df_trends <- function(codes, db='bistats', fmt = 'wide', y1 = 2010, tbl = 'trends_data'){
+df_trends <- get_data <- function(codes, db='bistats', fmt = 'wide', y1 = 2010, tbl = 'trends_data'){
 
   ldb <- dbp(db)
 
   if(nrow(ldb) >0){
 
      mdb <- ldb$path[1]
-     mcode <- split_str( tolower(code))
+     mcode <- split_str( tolower(codes))
 
      sql <- sprintf(
        "select yr,mth,dy, data_code,data_value from %s where yr>=%s and lower(data_code) in %s ", tbl,y1,mcode
