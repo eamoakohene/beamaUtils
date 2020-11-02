@@ -413,3 +413,90 @@ df_to_list <- function(df,col_name, col_value){
 
   return( as.list(e))
 }
+
+db_paths <- function(){
+  return(
+    data.frame(
+      db=c(
+        'bistats',
+        'beamafx',
+        'sankeys',
+        'ibeama_indices',
+        'ibtrends',
+        'bnetworks',
+        'datastore',
+        'fame',
+        'onsR2',
+        'orgalime',
+        'bts',
+        'storedfxns',
+        'bmm',
+        'bts_emails',
+        'cepe',
+        'prodcom',
+        'badd',
+        'centre_point',
+        'uktrade',
+        'uktrade_info',
+        'covid19',
+        'surveys',
+        'bindx'
+      ),
+      path=c(
+        '/packages/bistats/inst/extdata/bistats.sqlite',
+        '/packages/beamafx/inst/extdata/beamafx.sqlite',
+        '/packages/beamaSankey/inst/extdata/sankeys.sqlite',
+        '/packages/bindx/R/beama_indices.sqlite',
+        '/packages/bindx/R/btrends.sqlite',
+        '/packages/bnetworks/inst/networks/bnetworks1/bnetworks.sqlite',
+        '/packages/datastore/R/datastore.sqlite',
+        '/packages/fame27/inst/extdata/fame.sqlite',
+        '/packages/onsR2/inst/extdata/onsR2.sqlite',
+        '/packages/orgalime/inst/extdata/orgalime.sqlite',
+        '/packages/surveyapp/bts.sqlite',
+        '/packages/storedFxns/storedfxns.sqlite',
+        '/shiny/beama/bmonitor/bss.sqlite',
+        '/data/lite/bts_emails.sqlite',
+        '/shiny/cepe/cepe.sqlite',
+        '/data/lite/prodcom.sqlite',
+        '/data/badd.db',
+        '/shiny/centrePoint/centre_point.sqlite',
+        '/data/lite/uktrade.sqlite',
+        '/data/lite/uktrade_info.sqlite',
+        '/data/lite/covid19',
+        '/packages/surveys/surveys.sqlite',
+        '/packages/bindx/R/beama_indices.sqlite'
+
+      ),
+      stringsAsFactors = FALSE
+    )
+  )
+}
+
+dbp <- function(db){
+  ldb <- db_paths()
+
+  return(
+    sqldf::sqldf(
+      sprintf("select path from ldb where db ='%s';",db)
+    )
+  )
+}
+
+view_tbls <- function(db, drv = 'R'){
+  # db='bindx'
+  sql <- "SELECT name FROM sqlite_master WHERE type ='table' AND name NOT LIKE 'sqlite_%';"
+  ldb <- dbp(db)
+
+  if(nrow(ldb) > 0 ){
+
+    run_sql(
+      sql,
+      db=sprintf(
+          "%s:%s",
+          drv,
+          ldb$path[1]
+      )
+    )
+  }
+}
