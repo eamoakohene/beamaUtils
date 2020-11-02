@@ -500,3 +500,38 @@ view_tbls <- function(db, drv = 'R'){
     )
   }
 }
+
+df_trends <- function(codes, db='bistats', fmt = 'wide', y1 = 2010, tbl = 'trends_data'){
+
+  ldb <- dbp(db)
+
+  if(nrow(ldb) >0){
+
+     mdb <- ldb$path[1]
+     mcode <- split_str( tolower(code))
+
+     sql <- sprintf(
+       "select yr,mth,dy, data_code,data_value from %s where yr>=%s and lower(data_code) in %s ", tbl,y1,mcode
+     )
+
+     df <- run_sql( sql )
+
+     if(tolower(fmt) =='wide'){
+
+       return(
+
+          tidyr::spread( df, data_code, data_value)
+       )
+
+     }else{
+
+       return( df)
+
+     }
+
+  }else{
+
+    return (NULL)
+
+  }
+}
