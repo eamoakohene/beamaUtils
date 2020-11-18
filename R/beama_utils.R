@@ -312,6 +312,33 @@ ts_dates <- function(x){
   }
 }
 
+df_to_ts <- function(my_df, frq = 12, my_start = NULL){
+
+  if(!is.data.frame(my_df)){
+    cat("Please supply dataframe\n")
+    return( NULL)
+  }
+
+  if(frq %in% c(4,12)){
+    cat("Please ensure that frequency is 4 or 12\n")
+    return(NULL)
+  }
+
+  ts_start <- my_start
+
+  if(is.null(my_start)){
+
+    ts_start <- c(df$yr[1], df$mth[1])
+
+  }
+
+  if(is.null(my_start)){
+    cat("Please supply start\n")
+    return(NULL)
+  }
+
+  ts_freq <- frq
+}
 
 #' Data days
 #' Convert a date to days using assuming \code{d360} days in a year
@@ -356,6 +383,23 @@ run_sql <- function(qry, db='R:/shiny/beama/bmonitor/bss.sqlite'){
   results <- RSQLite::dbGetQuery(conn, qry)
   DBI::dbDisconnect(conn)
   return(results)
+}
+
+run_sql_db <- function(sql, db, drv = "R"){
+
+  db_name <- dbp(db)
+
+  if(nrow(db_name) > 0){
+
+    ldb <- paste0( drv, ":", db_name$path[1] )
+
+    return(
+      run_sql(sql, ldb)
+    )
+
+  }
+
+  return (NULL)
 }
 
 get_fxn <- function(name, db='R:/shiny/beama/bmonitor/bss.sqlite', view = FALSE){
@@ -475,65 +519,90 @@ db_paths <- function(){
   )
 }
 
-dbp <- function(db){
+dbp <- function(db, drv = 'R:' ){
   ldb <- db_paths()
-
-  return(
-    sqldf::sqldf(
-      sprintf("select path from ldb where db ='%s';",db)
-    )
+  df <- sqldf::sqldf(
+    sprintf("select path from ldb where db ='%s';", db )
   )
-}
-
-view_tbls <- function(db, drv = 'R'){
-  # db='bindx'
-  sql <- "SELECT name FROM sqlite_master WHERE type ='table' AND name NOT LIKE 'sqlite_%';"
-  ldb <- dbp(db)
-
-  if(nrow(ldb) > 0 ){
-
-    run_sql(
-      sql,
-      db=sprintf(
-          "%s:%s",
-          drv,
-          ldb$path[1]
-      )
+  if(nrow(df)>0){
+    return(
+      paste0(drv,df$path[1])
     )
   }
+
+  NULL
 }
 
-df_trends <- get_data <- function(codes, db='bistats', fmt = 'wide', y1 = 2010, tbl = 'trends_data'){
+view_tbls <- function(db, drv = 'R:'){
+  # db='bindx'
+  sql <- "SELECT name FROM sqlite_master WHERE type ='table' AND name NOT LIKE 'sqlite_%';"
 
-  ldb <- dbp(db)
 
-  if(nrow(ldb) >0){
 
-     mdb <- ldb$path[1]
+ return(
+    run_sql(
+      sql,
+      db=dbp(db, drv=drv)
+    )
+ )
+
+}
+
+df_trends <- get_data <- function(codes, db='bistats', fmt = 'wide', y1 = 2010, tbl = 'trends_data', drv = 'R:', dp = 1){
+  # db ='bindx'
+  ldb <- dbp(db, drv)
+
+  if(!is.null(ldb)){
+
+
      mcode <- split_str( tolower(codes))
 
      sql <- sprintf(
-       "select yr,mth,dy, data_code,data_value from %s where yr>=%s and lower(data_code) in %s ", tbl,y1,mcode
+       "select yr,mth,dy, data_code,data_value from %s where yr>=%s and lower(data_code) in %s order by data_code, yr, mth, dy", tbl,y1,mcode
      )
 
-     df <- run_sql( sql )
+     df <- run_sql( sql, db=ldb )
 
-     if(tolower(fmt) =='wide'){
+     if(nrow(df)>0){
 
-       return(
+       if(tolower(fmt) =='wide'){
 
-          tidyr::spread( df, data_code, data_value)
-       )
+         return(
 
-     }else{
+            tidyr::spread( df, data_code, data_value)
+         )
 
-       return( df)
+       }else if(tolower(fmt) =='ts'){
+         ts_start <- c(df$yr[1], df$mth[1])
+         ts_freq <- run_sql(
 
+           sprintf("select data_frq from trends_meta where lower(data_code) in %s limit 1", mcode),
+           db = ldb
+
+         )$data_frq
+
+         return( stats::ts( round(df$data_value,1), start = ts_start, frequency = ts_freq))
+
+       }else{
+
+         return( df)
+
+       }
      }
+
+     return (NULL)
 
   }else{
 
     return (NULL)
 
   }
+}
+
+search_code <- function(x, db = 'bistats', drv = 'R:'){
+  ldb <- dbp( db, drv)
+  sql <- sprintf("select data_code, data_frq from trends_meta where data_code like '%%%s%%'", x)
+  return(
+    run_sql(sql, db = ldb)
+  )
 }
