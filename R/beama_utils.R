@@ -606,3 +606,59 @@ search_code <- function(x, db = 'bistats', drv = 'R:'){
     run_sql(sql, db = ldb)
   )
 }
+
+bif <- function(..., env=parent.frame()) {
+
+  fx <- function(dots) {
+    if (length(dots) == 1) {
+
+      return(dots[[1]])
+
+    } else {
+
+      tmp <- dots[[1]]
+
+      return(call("ifelse", tmp[[3]], tmp[[2]], fx(dots[-1])))
+    }
+  }
+
+  isa <- function(x) {
+    if (length(x) > 1) {
+
+      return (identical(x[[1]], quote(`<-`)))
+
+    }else{
+
+      return(FALSE)
+    }
+  }
+
+  isv <- function(dots) {
+
+    check <- sapply(dots, isa)
+
+    if (all(head(check, -1)) && !tail(check, 1)) {
+
+      return("HDF")
+
+    } else if (all(check)) {
+
+      return("NDF")
+
+    } else {
+
+      stop("invalid bif arguments", call. = FALSE)
+
+    }
+  }
+
+  dots <- eval(substitute(alist(...)))
+  status <- isv(dots)
+
+  if (status == "NDF") {
+    dots <- c(dots, expression(NA))
+  }
+  eval(fx(dots), envir = env)
+}
+
+
