@@ -661,4 +661,14 @@ bif <- function(..., env=parent.frame()) {
   eval(fx(dots), envir = env)
 }
 
+test_url <- function(url = "https://www.beama.org/?pg=404"){
+
+  require(magrittr)
+  require(curl)
+
+  curl_fetch_memory(url = url ,  handle = new_handle())%$%
+    content %>%
+    rawToChar
+
+}
 
