@@ -672,3 +672,14 @@ test_url <- function(url = "https://www.beama.org/?pg=404"){
 
 }
 
+web_tbls <- function(url="https://www.bbc.co.uk/sport/olympics/57836709"){
+
+  x <- rvest::read_html(url)
+  tbls <- x|> rvest::html_table(fill=T)
+  if( length(tbls) == 0){
+    return(NULL)
+  }
+  return(tbls)
+
+}
+
