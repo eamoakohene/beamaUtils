@@ -385,16 +385,15 @@ run_sql <- function(qry, db='R:/shiny/beama/bmonitor/bss.sqlite'){
   return(results)
 }
 
-run_sql_db <- function(sql, db, drv = "R"){
+run_sql_db <- function(sql, db, drv = "R:"){
 
-  db_name <- dbp(db)
 
-  if(nrow(db_name) > 0){
+  db_name <- dbp(db,drv)
 
-    ldb <- paste0( drv, ":", db_name$path[1] )
+  if(nchar(db_name) > 5){
 
     return(
-      run_sql(sql, ldb)
+      run_sql(sql, db_name)
     )
 
   }
@@ -485,7 +484,8 @@ db_paths <- function(){
         'covid19',
         'surveys',
         'bindx',
-        'bmonitor'
+        'bmonitor',
+        'badd'
       ),
       path=c(
         '/packages/bistats/inst/extdata/bistats.sqlite',
@@ -511,8 +511,8 @@ db_paths <- function(){
         '/data/lite/covid19',
         '/packages/surveys/surveys.sqlite',
         '/packages/bindx/R/beama_indices.sqlite',
-        '/shiny/beama/bmonitor/bss.sqlite'
-
+        '/shiny/beama/bmonitor/bss.sqlite',
+        '/data/badd.db'
       ),
       stringsAsFactors = FALSE
     )
@@ -661,7 +661,7 @@ bif <- function(..., env=parent.frame()) {
   eval(fx(dots), envir = env)
 }
 
-test_url <- function(url = "https://www.beama.org/?pg=404"){
+test_url<- web_url <- function(url = "https://www.beama.org/?pg=404"){
 
   require(magrittr)
   require(curl)
@@ -683,3 +683,21 @@ web_tbls <- function(url="https://www.bbc.co.uk/sport/olympics/57836709"){
 
 }
 
+#### DAYS IN MONTH
+dmth <- function(mth,yr) {
+
+  dt <- as.Date(sprintf("%s-%02d-01", yr, mth))
+  days <- 28:31
+
+  return(
+    rev(
+      days[
+        which(
+          !is.na(
+              as.Date(paste0( substr(dt, 1, 8), days), '%Y-%m-%d')
+          )
+       )
+     ]
+    )[1]
+  )
+}
