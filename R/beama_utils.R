@@ -2,7 +2,7 @@
 #' x = numeric
 #' k = integer
 
-set_decimal <- function(x, k, cut = 200){
+set_decimal <- function(x, k, cut = 200 ){
 
   if( !is.null(x) && length(x)> 0 ){
 
